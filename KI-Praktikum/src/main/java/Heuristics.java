@@ -32,6 +32,21 @@ public class Heuristics {
             return result;
         }
 
+    static int randomHeuristic(int[][] board) {
+        int result = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] != 0) {
+                    result++;
+                }
+                if(board[i][j] == i * 3 + j + 1){
+                    result--;
+                }
+            }
+        }
+        return result;
+    }
+
         // Method to calculate Linear Conflict heuristic
         static int linearConflict(int[][] board) {
             int conflict = 0;

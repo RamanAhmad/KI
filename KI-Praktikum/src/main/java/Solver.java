@@ -20,6 +20,7 @@ public class Solver {
             }
 
             var heuristicName = switch (choice) {
+                case 0 -> "Our Heuristic";
                 case 1 -> "Manhattan Distance";
                 case 2 -> "Misplaced Tiles";
                 default -> "LC and MD";

@@ -8,11 +8,14 @@ public class EightPuzzle {
 
     public int chooseHeuristic() {
         Scanner sc = new Scanner(System.in);
+        System.out.println();
         System.out.println("Choose heuristic function:");
+        System.out.println("0. Our Heuristic ;)");
         System.out.println("1. Manhattan Distance");
         System.out.println("2. Misplaced Tiles");
         System.out.println("3. Linear Conflict and Manhattan Distance");
-        System.out.println("4. To show results");
+        System.out.println("-".repeat(41));
+        System.out.println("4. Show Results");
         String input = sc.nextLine();
         return Integer.parseInt(input);
     }
@@ -101,6 +104,7 @@ public class EightPuzzle {
 
     public int calculateCost(int[][] board, int choice) {
         return switch (choice) {
+            case 0 -> Heuristics.randomHeuristic(board);
             case 1 -> Heuristics.manhattanDistance(board);
             case 2 -> Heuristics.misplacedTiles(board);
             case 3 -> Heuristics.linearConflict(board) + Heuristics.manhattanDistance(board);
