@@ -6,7 +6,7 @@
 public class Heuristics {
 
         // Method to calculate Manhattan distance heuristic
-        static int manhattanDistance(int[][] board) {
+        public int manhattanDistance(int[][] board) {
             int result = 0;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -20,7 +20,7 @@ public class Heuristics {
         }
 
         // Method to calculate Tiles out of place heuristic
-        static int misplacedTiles(int[][] board) {
+        public int misplacedTiles(int[][] board) {
             int result = 0;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -32,7 +32,7 @@ public class Heuristics {
             return result;
         }
 
-    static int randomHeuristic(int[][] board) {
+    public int randomHeuristic(int[][] board) {
         int result = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -48,7 +48,7 @@ public class Heuristics {
     }
 
         // Method to calculate Linear Conflict heuristic
-        static int linearConflict(int[][] board) {
+         public int linearConflict(int[][] board) {
             int conflict = 0;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {

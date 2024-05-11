@@ -3,8 +3,8 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class EightPuzzle {
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+     int[] dx = {-1, 1, 0, 0};
+     int[] dy = {0, 0, -1, 1};
 
     public int chooseHeuristic() {
         Scanner sc = new Scanner(System.in);
@@ -71,7 +71,7 @@ public class EightPuzzle {
         }
     }
 
-    static int[][] swapTiles(int[][] board, int x, int y, int nx, int ny) {
+    public int[][] swapTiles(int[][] board, int x, int y, int nx, int ny) {
         int[][] newBoard = new int[3][3];
         for (int i = 0; i < 3; i++) {
             System.arraycopy(board[i], 0, newBoard[i], 0, 3);
@@ -81,7 +81,7 @@ public class EightPuzzle {
         return newBoard;
     }
 
-    static void showResult(int[][] arr) {
+    public void showResult(int[][] arr) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 System.out.print(arr[i][j] + " ");
@@ -91,7 +91,7 @@ public class EightPuzzle {
         System.out.println();
     }
 
-    static void findZero(int[][] arr, int[] pos) {
+     void findZero(int[][] arr, int[] pos) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (arr[i][j] == 0) {
@@ -103,13 +103,14 @@ public class EightPuzzle {
         }
     }
 
+    Heuristics heuristics = new Heuristics();
     public int calculateCost(int[][] board, int choice) {
         return switch (choice) {
-            case 0 -> Heuristics.randomHeuristic(board);
-            case 1 -> Heuristics.manhattanDistance(board);
-            case 2 -> Heuristics.misplacedTiles(board);
-            case 3 -> Heuristics.linearConflict(board) + Heuristics.randomHeuristic(board);
-            case 4 -> Heuristics.linearConflict(board) + Heuristics.manhattanDistance(board);
+            case 0 -> heuristics.randomHeuristic(board);
+            case 1 -> heuristics.manhattanDistance(board);
+            case 2 -> heuristics.misplacedTiles(board);
+            case 3 -> heuristics.linearConflict(board) + heuristics.randomHeuristic(board);
+            case 4 -> heuristics.linearConflict(board) + heuristics.manhattanDistance(board);
             default -> throw new IllegalArgumentException("Invalid choice of heuristic function.");
         };
     }
