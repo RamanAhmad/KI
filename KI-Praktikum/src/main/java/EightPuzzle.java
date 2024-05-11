@@ -14,8 +14,9 @@ public class EightPuzzle {
         System.out.println("1. Manhattan Distance");
         System.out.println("2. Misplaced Tiles");
         System.out.println("3. Linear Conflict and Manhattan Distance");
+        System.out.println("4. Linear Conflict and Our Heuristic");
         System.out.println("-".repeat(41));
-        System.out.println("4. Show Results");
+        System.out.println("5. Show Results");
         String input = sc.nextLine();
         return Integer.parseInt(input);
     }
@@ -107,7 +108,8 @@ public class EightPuzzle {
             case 0 -> Heuristics.randomHeuristic(board);
             case 1 -> Heuristics.manhattanDistance(board);
             case 2 -> Heuristics.misplacedTiles(board);
-            case 3 -> Heuristics.linearConflict(board) + Heuristics.manhattanDistance(board);
+            case 3 -> Heuristics.linearConflict(board) + Heuristics.randomHeuristic(board);
+            case 4 -> Heuristics.linearConflict(board) + Heuristics.manhattanDistance(board);
             default -> throw new IllegalArgumentException("Invalid choice of heuristic function.");
         };
     }

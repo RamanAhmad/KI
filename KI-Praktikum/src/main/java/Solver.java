@@ -14,7 +14,7 @@ public class Solver {
 
             int choice = eightPuzzle.chooseHeuristic();
 
-            if (choice == 4) {
+            if (choice == 5) {
                 PerformanceInfos.displayChoiceInfo(choiceInfoList);
                 break;
             }
@@ -23,6 +23,7 @@ public class Solver {
                 case 0 -> "Our Heuristic";
                 case 1 -> "Manhattan Distance";
                 case 2 -> "Misplaced Tiles";
+                case 3 -> "Linear Conflict and OH";
                 default -> "LC and MD";
             };
 
