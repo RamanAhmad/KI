@@ -6,20 +6,7 @@ public class EightPuzzle {
      int[] dx = {-1, 1, 0, 0};
      int[] dy = {0, 0, -1, 1};
 
-    public int chooseHeuristic() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Choose heuristic function:");
-        System.out.println("0. Our Heuristic ;)");
-        System.out.println("1. Manhattan Distance");
-        System.out.println("2. Misplaced Tiles");
-        System.out.println("3. Linear Conflict and Manhattan Distance");
-        System.out.println("4. Linear Conflict and Our Heuristic");
-        System.out.println("-".repeat(41));
-        System.out.println("5. Show Results");
-        String input = sc.nextLine();
-        return Integer.parseInt(input);
-    }
+
 
     public State searchGoalState(PriorityQueue<State> pq, int choice) {
         State goalState = null;
