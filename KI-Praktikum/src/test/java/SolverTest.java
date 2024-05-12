@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class SolverTest {
-    private static void templateTester (int heuristic, String heuristicName) {
+    private static void templateTester(int heuristic, String heuristicName) {
         EightPuzzle eightPuzzle = new EightPuzzle();
         Utils utils = new Utils();
         List<Utils.ChoiceInfo> choiceInfoList = new ArrayList<>();
@@ -34,7 +34,7 @@ public class SolverTest {
             long endTime = System.nanoTime();
             long memoryUsed = memoryAfter - memoryBefore;
             long duration = (endTime - startTime) / 1000000;
-            eightPuzzle.printSolutionOrNoSolution(goalState);
+            utils.printSolutionOrNoSolution(goalState);
             choiceInfoList.add(new Utils.ChoiceInfo(heuristic, heuristicName, duration, memoryUsed));
             i++;
             Utils.displayChoiceInfo(choiceInfoList);

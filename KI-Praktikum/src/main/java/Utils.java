@@ -1,11 +1,39 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Utils {
     Scanner sc = new Scanner(System.in);
 
+    public void printSolutionOrNoSolution(State goalState) {
+        if (goalState != null) {
+            printSolutionPath(goalState);
+        } else {
+            System.out.println("No solution found.");
+        }
+    }
+
+    public void printSolutionPath(State goalState) {
+        Stack<State> path = new Stack<>();
+        State currentState = goalState;
+        while (currentState != null) {
+            path.push(currentState);
+            currentState = currentState.parent;
+        }
+
+        while (!path.isEmpty()) {
+            State state = path.pop();
+            showResult(state.board);
+        }
+    }
+
+    public void showResult(int[][] arr) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 
     public static void displayChoiceInfo(List<ChoiceInfo> choiceInfoList) {
         System.out.printf("%-10s\t%-20s\t%-20s\t%-20s\n", "Choice", "Heuristic", "Execution Time (ms)", "Memory Used (Bytes)");
@@ -16,8 +44,7 @@ public class Utils {
         }
     }
 
-    // Innere Klasse zum Speichern von Informationen zu jeder Auswahl
-        public record ChoiceInfo(int choice, String heuristicName, long duration, long memoryUsed) {
+    public record ChoiceInfo(int choice, String heuristicName, long duration, long memoryUsed) {
     }
 
     public int[][] generateRandomBoard() {
@@ -69,7 +96,6 @@ public class Utils {
         return Integer.parseInt(input);
     }
 
-
     public int heuristicOptions() {
         System.out.println();
 
@@ -85,16 +111,16 @@ public class Utils {
         return Integer.parseInt(input);
     }
 
-    public int [][] initialBoard (int input){
-       if (input==11){
-           return new int[][] {
-               {1, 8, 2},
-               {0, 4, 3},
-               {7, 6, 5}
-           };
-       }
+    public int[][] initialBoard(int input) {
+        if (input == 11) {
+            return new int[][]{
+                    {1, 8, 2},
+                    {0, 4, 3},
+                    {7, 6, 5}
+            };
+        }
 
-        return new int[][] {
+        return new int[][]{
                 {1, 5, 7},
                 {8, 0, 6},
                 {3, 2, 4}

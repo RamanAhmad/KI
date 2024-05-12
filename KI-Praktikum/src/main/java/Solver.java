@@ -5,9 +5,9 @@ public class Solver {
         EightPuzzle eightPuzzle = new EightPuzzle();
         Utils utils = new Utils();
         List<Utils.ChoiceInfo> choiceInfoList = new ArrayList<>();
-
         int[][] initialBoard;
         int inputInitialBoard = utils.initialBoardOption();
+
         if (inputInitialBoard == 22) {
             initialBoard = utils.initialBoard(22);
             System.out.println("No solutions available - inversion count problem!");
@@ -15,7 +15,6 @@ public class Solver {
             initialBoard = utils.initialBoard(11);
 
             while (true) {
-                // Auswahl der Heuristik
                 int choice = utils.heuristicOptions();
 
                 if (choice == 5) {
@@ -43,18 +42,15 @@ public class Solver {
 
                 System.gc();
                 memoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-
                 State goalState = eightPuzzle.searchGoalState(pq, choice);
 
                 System.gc();
                 memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
                 long endTime = System.nanoTime();
-
-                // Berechnung der tatsächlichen Speichernutzung
                 long memoryUsed = memoryAfter - memoryBefore;
                 long duration = (endTime - startTime) / 1000000;
-                eightPuzzle.printSolutionOrNoSolution(goalState);
+                utils.printSolutionOrNoSolution(goalState);
                 choiceInfoList.add(new Utils.ChoiceInfo(choice, heuristicName, duration, memoryUsed));
             }
         }

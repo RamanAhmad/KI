@@ -1,12 +1,10 @@
 import java.util.PriorityQueue;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class EightPuzzle {
-     int[] dx = {-1, 1, 0, 0};
-     int[] dy = {0, 0, -1, 1};
-
-
+    Heuristics heuristics = new Heuristics();
+    int[] dx = {-1, 1, 0, 0};
+    int[] dy = {0, 0, -1, 1};
 
     public State searchGoalState(PriorityQueue<State> pq, int choice) {
         State goalState = null;
@@ -36,27 +34,6 @@ public class EightPuzzle {
         return goalState;
     }
 
-    public void printSolutionOrNoSolution(State goalState) {
-        if (goalState != null) {
-            printSolutionPath(goalState);
-        } else {
-            System.out.println("No solution found.");
-        }
-    }
-
-    public void printSolutionPath(State goalState) {
-        Stack<State> path = new Stack<>();
-        State currentState = goalState;
-        while (currentState != null) {
-            path.push(currentState);
-            currentState = currentState.parent;
-        }
-
-        while (!path.isEmpty()) {
-            State state = path.pop();
-            showResult(state.board);
-        }
-    }
 
     public int[][] swapTiles(int[][] board, int x, int y, int nx, int ny) {
         int[][] newBoard = new int[3][3];
@@ -68,17 +45,7 @@ public class EightPuzzle {
         return newBoard;
     }
 
-    public void showResult(int[][] arr) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(arr[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-     void findZero(int[][] arr, int[] pos) {
+    void findZero(int[][] arr, int[] pos) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (arr[i][j] == 0) {
@@ -90,7 +57,6 @@ public class EightPuzzle {
         }
     }
 
-    Heuristics heuristics = new Heuristics();
     public int calculateCost(int[][] board, int choice) {
         return switch (choice) {
             case 0 -> heuristics.randomHeuristic(board);
