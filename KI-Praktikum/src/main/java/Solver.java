@@ -48,7 +48,7 @@ public class Solver {
                 memoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
                 long endTime = System.nanoTime();
-                long memoryUsed = memoryAfter - memoryBefore;
+                long memoryUsed = Math.abs(memoryAfter - memoryBefore);
                 long duration = (endTime - startTime) / 1000000;
                 utils.printSolutionOrNoSolution(goalState);
                 choiceInfoList.add(new Utils.ChoiceInfo(choice, heuristicName, duration, memoryUsed));

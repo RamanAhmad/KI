@@ -6,13 +6,13 @@ public class EightPuzzle {
     int[] dx = {-1, 1, 0, 0};
     int[] dy = {0, 0, -1, 1};
 
-    public State searchGoalState(PriorityQueue<State> pq, int choice) {
+    public State searchGoalState(PriorityQueue<State> pq, int heuristic) {
         State goalState = null;
         while (!pq.isEmpty()) {
             State cur = pq.poll();
             int[][] board = cur.board;
 
-            if (calculateCost(board, choice) == 0) {
+            if (calculateCost(board, heuristic) == 0) {
                 goalState = cur;
                 break;
             }
@@ -26,7 +26,7 @@ public class EightPuzzle {
                 int ny = y + dy[k];
                 if (nx >= 0 && nx < 3 && ny >= 0 && ny < 3) {
                     int[][] newBoard = swapTiles(board, x, y, nx, ny);
-                    State newState = new State(newBoard, nx, ny, calculateCost(newBoard, choice) + cur.depth + 1, cur.depth + 1, cur);
+                    State newState = new State(newBoard, nx, ny, calculateCost(newBoard, heuristic) + cur.depth + 1, cur.depth + 1, cur);
                     pq.add(newState);
                 }
             }
@@ -57,8 +57,8 @@ public class EightPuzzle {
         }
     }
 
-    public int calculateCost(int[][] board, int choice) {
-        return switch (choice) {
+    public int calculateCost(int[][] board, int heuristic) {
+        return switch (heuristic) {
             case 0 -> heuristics.randomHeuristic(board);
             case 1 -> heuristics.manhattanDistance(board);
             case 2 -> heuristics.misplacedTiles(board);
