@@ -1,19 +1,34 @@
 
-
 public class Main {
 
     public static void main(String[] args) {
+        double c = 1.0;
+        double alpha = 1;
+        double beta = 5;
+        double evaporation = 0.5;
+        double Q = 500;
+        double antFactor = 0.8;
+        double randomFactor = 0.01;
+        int numberOfCities = 10;
+
         double[][] fixedMatrix = {
-                {0, 29, 20, 21},
-                {29, 0, 15, 17},
-                {20, 15, 0, 28},
-                {21, 17, 28, 0}
+                {0, 9, 20, 31},
+                {9, 0, 14, 7},
+                {20, 14, 0, 28},
+                {31, 7, 28, 0}
         };
-        AntColonyOpt acoWithRandomMatrix = new AntColonyOpt(null, 21);
-        AntColonyOpt actWithFixedMatrix = new AntColonyOpt(fixedMatrix, 0);
-        actWithFixedMatrix.setupAnts();
-        acoWithRandomMatrix.setupAnts();
-        acoWithRandomMatrix.startAntOptimization(2);
-        actWithFixedMatrix.startAntOptimization(2);
+
+        // Mit festen Abständen
+        AntColonyOpt aco = new AntColonyOpt(fixedMatrix, numberOfCities, c, alpha, beta, evaporation, Q, antFactor, randomFactor);
+        int attempts = 6;
+        aco.startAntOptimization(attempts);
+
+        // Mit randomisierten Abständen
+
+        System.out.println("#".repeat(70));
+        AntColonyOpt acoRandom = new AntColonyOpt(null, numberOfCities, c, alpha, beta, evaporation, Q, antFactor, randomFactor);
+        int attemptsRandom = 6;
+        acoRandom.startAntOptimization(attemptsRandom);
     }
 }
+

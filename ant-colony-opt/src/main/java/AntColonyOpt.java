@@ -7,23 +7,14 @@ import java.util.stream.IntStream;
 
 public class AntColonyOpt {
 
-    // Anfangswerte der Pheromone auf den Kanten
-    private final double c = 1.0;
-    // Einfluss der Pheromonspuren auf die Wahl der nächsten Stadt
-    private final double alpha = 1;
-    // Einfluss der Entfernung (Heuristik) auf die Wahl der nächsten Stadt
-    private final double beta = 5;
-    // Rate, mit der die Pheromonspuren verdampfen
-    private final double evaporation = 0.5;
-    // Konstante für die Menge an Pheromonen, die eine Ameise hinterlässt
-    private final double Q = 500;
-    // Anteil der Ameisen zur Anzahl der Städte
-    private final double antFactor = 0.8;
-    // Wahrscheinlichkeit, zufällig eine Stadt zu wählen
-    private final double randomFactor = 0.01;
-
-    // Maximale Anzahl der Iterationen
-    private final int maxIterations = 1000;
+    // Algorithmus Parameter
+    private final double c;
+    private final double alpha;
+    private final double beta;
+    private final double evaporation;
+    private final double Q;
+    private final double antFactor;
+    private final double randomFactor;
 
     // Anzahl der Städte und Ameisen
     private final int numberOfCities;
@@ -44,10 +35,19 @@ public class AntColonyOpt {
     private int[] bestTourOrder;
     private double bestTourLength;
 
-    public AntColonyOpt(double[][] matrix, int noOfCities) {
-        if (matrix != null){
+    public AntColonyOpt(double[][] matrix, int noOfCities, double c, double alpha, double beta,
+                        double evaporation, double Q, double antFactor, double randomFactor) {
+        this.c = c;
+        this.alpha = alpha;
+        this.beta = beta;
+        this.evaporation = evaporation;
+        this.Q = Q;
+        this.antFactor = antFactor;
+        this.randomFactor = randomFactor;
+
+        if (matrix != null) {
             this.graph = matrix;
-        }else {
+        } else {
             this.graph = generateRandomMatrix(noOfCities);
         }
         numberOfCities = graph.length;
@@ -59,9 +59,6 @@ public class AntColonyOpt {
                 .forEach(i -> ants.add(new Ant(numberOfCities)));
     }
 
-    /**
-     * Generate initial solution
-     */
     public double[][] generateRandomMatrix(int n) {
         double[][] randomMatrix = new double[n][n];
         IntStream.range(0, n)
@@ -70,9 +67,6 @@ public class AntColonyOpt {
         return randomMatrix;
     }
 
-    /**
-     * Perform ant optimization
-     */
     public void startAntOptimization(int attempt) {
         System.out.println();
         for (int i = 1; i <= attempt; i++) {
@@ -83,11 +77,10 @@ public class AntColonyOpt {
 
     public void solve() {
         clearTrails();
-        for (int i = 0; i < maxIterations; i++) {
-            moveAnts();
-            updateTrails();
-            updateBest();
-        }
+        setupAnts();
+        moveAnts();
+        updateTrails();
+        updateBest();
         System.out.println("Gesamte Länge: " + (bestTourLength - numberOfCities));
         System.out.println("Beste Torreihe: " + Arrays.toString(bestTourOrder));
         bestTourOrder.clone();
@@ -95,11 +88,9 @@ public class AntColonyOpt {
     }
 
     public void setupAnts() {
-        for (int i = 0; i < numberOfAnts; i++) {
-            for (Ant ant : ants) {
-                ant.clear();
-                ant.visitCity(-1, random.nextInt(numberOfCities));
-            }
+        for (Ant ant : ants) {
+            ant.clear();
+            ant.visitCity(-1, random.nextInt(numberOfCities));
         }
         currentIndex = 0;
     }
@@ -136,7 +127,6 @@ public class AntColonyOpt {
         throw new RuntimeException("There are no other cities");
     }
 
-
     public void calculateProbabilities(Ant ant) {
         int i = ant.trail[currentIndex];
         double pheromone = 0.0;
@@ -170,14 +160,10 @@ public class AntColonyOpt {
         }
     }
 
-    /**
-     * Update the best solution
-     */
     private void updateBest() {
         if (bestTourOrder == null) {
             bestTourOrder = ants.get(0).trail;
-            bestTourLength = ants.get(0)
-                    .trailLength(graph);
+            bestTourLength = ants.get(0).trailLength(graph);
         }
         for (Ant a : ants) {
             if (a.trailLength(graph) < bestTourLength) {
@@ -194,5 +180,4 @@ public class AntColonyOpt {
             }
         }
     }
-
 }
