@@ -35,6 +35,12 @@ public class AntColonyOpt {
     private int[] bestTourOrder;
     private double bestTourLength;
 
+    public double getHoleDis() {
+        return holeDis;
+    }
+
+    private double holeDis;
+
     public AntColonyOpt(double[][] matrix, int noOfCities, double c, double alpha, double beta,
                         double evaporation, double Q, double antFactor, double randomFactor) {
         this.c = c;
@@ -76,6 +82,7 @@ public class AntColonyOpt {
     }
 
     public void solve() {
+
         clearTrails();
         setupAnts();
         moveAnts();
@@ -85,6 +92,7 @@ public class AntColonyOpt {
         System.out.println("Beste Torreihe: " + Arrays.toString(bestTourOrder));
         bestTourOrder.clone();
         System.out.println("=".repeat(70));
+        holeDis = bestTourLength - numberOfCities;
     }
 
     public void setupAnts() {

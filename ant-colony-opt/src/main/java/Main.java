@@ -6,10 +6,13 @@ public class Main {
         double alpha = 1;
         double beta = 5;
         double evaporation = 0.5;
-        double Q = 500;
+        double Q = 500; // Pheromon Konstante
+        /*
+            Erklärung zu Pheromon-Konstante
+         */
         double antFactor = 0.8;
         double randomFactor = 0.01;
-        int numberOfCities = 10;
+        int numberOfCities = 100;
 
         double[][] fixedMatrix = {
                 {0, 9, 20, 31},
