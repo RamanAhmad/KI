@@ -11,11 +11,10 @@ public class AntColonyOptTest {
     @Test
     public void test_alpha_and_beta() {
         test_alpha_and_beta_by_adjusting_cities_number(10);
-        //test_alpha_and_beta_by_adjusting_cities_number(100);
-        //test_alpha_and_beta_by_adjusting_cities_number(1000);
-
-        //Util.writeResultsToCSV(results, "results.csv");
-
+//        test_alpha_and_beta_by_adjusting_cities_number(100);
+//        test_alpha_and_beta_by_adjusting_cities_number(1000);
+//
+//        Util.writeResultsToCSV(results, "results.csv");
     }
 
     @Test
@@ -24,95 +23,16 @@ public class AntColonyOptTest {
         test_act_static(100, 1, 0);
     }
 
-    private void test_act_static(int cities, double alpha, double beta) {
-        List<Util.Result> listOfAttempt = new ArrayList<>();
-        Util.Result bestResult = null;
-        System.out.println("Testen von Städten, Alpha und Beta:");
-        AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
-        aco.startAntOptimization(1);
-
-        Util.Result result = new Util.Result(cities, alpha, beta, aco.getHoleDis());
-        listOfAttempt.add(result);
-        if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
-            bestResult = result;
-        }
-        System.out.println("Cities, Alpha, Beta, Evaporation, Best Tour Length");
-        for (Util.Result res : listOfAttempt) {
-            System.out.println(res);
-        }
-
-        // Beste Parameter ausgeben
-        if (bestResult != null) {
-            System.out.println("\nBeste Parameter:");
-            System.out.println(bestResult);
-        }
+    @Test
+    public void test_act_alpha_and_beta_with_big_numbers() {
+        test_act_static(100, 500, 100);
+        test_act_static(100, 20, 100);
     }
-
-
-    private List<Util.Result> test_alpha_and_beta_by_adjusting_cities_number(int cities) {
-        List<Util.Result> listOfAttempt = new ArrayList<>();
-        Util.Result bestResult = null;
-        System.out.println("Testen von Städten, Alpha und Beta:");
-
-        // Testen von Alpha von 0 bis 100 und Beta von 99 bis 0
-        for (int i = 0; i < 100; i++) {
-            double alpha = i;
-            double beta = 99 - i;
-            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
-            aco.startAntOptimization(1);
-
-            Util.Result result = new Util.Result(cities, alpha, beta, aco.getHoleDis());
-            listOfAttempt.add(result);
-            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
-                bestResult = result;
-            }
-        }
-
-        // Testen von Alpha von 99 bis 0 und Beta von 0 bis 100
-        System.out.println("Testen von Alpha von 100 bis 0 und Beta von 0 bis 100:");
-        for (int i = 0; i < 100; i++) {
-            double alpha = 99 - i;
-            double beta = i;
-            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
-            aco.startAntOptimization(1);
-
-            Util.Result result = new Util.Result(cities, alpha, beta, aco.getHoleDis());
-            listOfAttempt.add(result);
-            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
-                bestResult = result;
-            }
-        }
-
-        // Testen von Alpha und Beta von 0 bis 100
-        System.out.println("Testen von Alpha und Beta von 0 bis 100:");
-        for (int i = 0; i < 100; i++) {
-            double alpha = i;
-            double beta = i;
-            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
-            aco.startAntOptimization(1);
-
-            Util.Result result = new Util.Result(cities, alpha, beta, aco.getHoleDis());
-            listOfAttempt.add(result);
-            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
-                bestResult = result;
-            }
-        }
-
-        // Beste Parameter hinzufügen
-        if (bestResult != null) {
-            System.out.println("\nBeste Parameter:");
-            System.out.println(bestResult);
-            listOfAttempt.add(bestResult);
-        }
-
-        System.out.println("Cities, Alpha, Beta, Best Tour Length");
-        for (Util.Result result : listOfAttempt) {
-            System.out.println(result);
-        }
-
-        return listOfAttempt;
-    }
-
+    double[][] matrix = {
+            {0, 1, 2},
+            {1, 0, 3},
+            {2, 3, 0}
+    };
 
     @Test
     public void test_fixedMatrix_C() {
@@ -254,25 +174,110 @@ public class AntColonyOptTest {
         antColonyOpt1.startAntOptimization(attempt);
     }
 
+    private void test_act_static(int cities, double alpha, double beta) {
+        List<Util.Result> listOfAttempt = new ArrayList<>();
+        Util.Result bestResult = null;
+        System.out.println("Testen von Städten, Alpha und Beta:");
+        AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
+        aco.startAntOptimization(1);
+
+        int[] bestTourOrder = aco.getBestTourOrder();
+        Util.Result result = new Util.Result(cities, alpha, beta, aco.getWholeDis(), bestTourOrder);
+        listOfAttempt.add(result);
+        if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
+            bestResult = result;
+        }
+//        for (Util.Result res : listOfAttempt) {
+//            System.out.println(res);
+//        } System.out.println("Cities, Alpha, Beta, Best Tour Length, Best Tour Order");
+//
+
+        // Beste Parameter ausgeben
+        if (bestResult != null) {
+            System.out.println("\nBeste Parameter:");
+            System.out.println("Cities, Alpha, Beta, Best Tour Length, Best Tour Order");
+            System.out.println(bestResult);
+        }
+    }
+
+
+
+    private List<Util.Result> test_alpha_and_beta_by_adjusting_cities_number(int cities) {
+        List<Util.Result> listOfAttempt = new ArrayList<>();
+        Util.Result bestResult = null;
+        System.out.println("Testen von Städten, Alpha und Beta:");
+
+        // Testen von Alpha von 0 bis 100 und Beta von 99 bis 0
+        for (int i = 0; i < 100; i++) {
+            double alpha = i;
+            double beta = 99 - i;
+            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
+            aco.startAntOptimization(1);
+
+            int[] bestTourOrder = aco.getBestTourOrder();
+            Util.Result result = new Util.Result(cities, alpha, beta, aco.getWholeDis(), bestTourOrder);
+            listOfAttempt.add(result);
+            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
+                bestResult = result;
+            }
+        }
+
+        // Testen von Alpha von 99 bis 0 und Beta von 0 bis 100
+        System.out.println("Testen von Alpha von 100 bis 0 und Beta von 0 bis 100:");
+        for (int i = 0; i < 100; i++) {
+            double alpha = 99 - i;
+            double beta = i;
+            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
+            aco.startAntOptimization(1);
+
+            int[] bestTourOrder = aco.getBestTourOrder();
+            Util.Result result = new Util.Result(cities, alpha, beta, aco.getWholeDis(), bestTourOrder);
+            listOfAttempt.add(result);
+            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
+                bestResult = result;
+            }
+        }
+
+        // Testen von Alpha und Beta von 0 bis 100
+        System.out.println("Testen von Alpha und Beta von 0 bis 100:");
+        for (int i = 0; i < 100; i++) {
+            double alpha = i;
+            double beta = i;
+            AntColonyOpt aco = testAntColonyOptPheromon(null, cities, alpha, beta);
+            aco.startAntOptimization(1);
+
+            int[] bestTourOrder = aco.getBestTourOrder();
+            Util.Result result = new Util.Result(cities, alpha, beta, aco.getWholeDis(), bestTourOrder);
+            listOfAttempt.add(result);
+            if (bestResult == null || result.bestTourLength < bestResult.bestTourLength) {
+                bestResult = result;
+            }
+        }
+
+        // Beste Parameter hinzufügen
+
+        if (bestResult != null) {
+            System.out.println("\nBeste Parameter:");
+            System.out.println("Cities, Alpha, Beta, Best Tour Length, Best Tour Order");
+            System.out.println(bestResult);
+            listOfAttempt.add(bestResult);
+        }
+
+//        System.out.println("Cities, Alpha, Beta, Best Tour Length, Best Tour Order");
+//        for (Util.Result result : listOfAttempt) {
+//            System.out.println(result);
+//        }
+
+        return listOfAttempt;
+    }
 
     enum ParamsOpt {
         C, ALPHA, BETA, EVA, Q, ANT_FACTOR, RANDOM_FACTOR, ALPHA_AND_BETA
     }
 
-    double[][] matrix = {
-            {0, 1, 2},
-            {1, 0, 3},
-            {2, 3, 0}
-    };
-
     private AntColonyOpt testAntColonyOptPheromon(double[][] matrix, int noOfCities, double alpha, double beta) {
-        //return new AntColonyOpt(null, noOfCities, 1.0, alpha, beta, 0.5, 500.0, 0.8, 0.01);
-
         return new AntColonyOpt(matrix, noOfCities, 1.0, alpha, beta, 0.5, 500.0, 0.8, 0.01);
-
-
     }
-
 
     private AntColonyOpt coreAntColonyOpt(ParamsOpt paramOption, double value, double[][] matrix) {
 

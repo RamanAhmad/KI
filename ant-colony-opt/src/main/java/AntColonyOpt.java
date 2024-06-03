@@ -8,12 +8,42 @@ import java.util.stream.IntStream;
 public class AntColonyOpt {
 
     // Algorithmus Parameter
+    /**
+     * Die Konstante c bestimmt den Einfluss der Pheromonmenge auf die Wahrscheinlichkeit,
+     * dass eine Ameise eine bestimmte Kante wählt.
+     * Ein höherer c-Wert verstärkt den Einfluss der Pheromonspuren auf die Entscheidungsfindung der Ameisen.
+     */
     private final double c;
+    /**
+     * Der Parameter alpha bestimmt den Einfluss der Pheromonmenge auf die Wahrscheinlichkeit,
+     * dass eine Ameise eine bestimmte Kante wählt. Ein höherer alpha-Wert verstärkt den Einfluss der Pheromonspuren.
+     */
     private final double alpha;
+    /**
+     * Der Parameter beta bestimmt den Einfluss der Sichtbarkeit (Invers der Distanz) auf die Wahrscheinlichkeit,
+     * dass eine Ameise eine bestimmte Kante wählt. Ein höherer beta-Wert verstärkt den Einfluss der kürzeren Distanzen.
+     */
     private final double beta;
+    /**
+     * Der Parameter evaporation bestimmt die Rate, mit der die Pheromonspuren auf den Kanten im Laufe der Zeit abnehmen.
+     * Ein höherer Wert führt zu einer schnelleren Verdunstung, wodurch die Ameisen stärker dazu angeregt werden, neue Wege zu erkunden.
+     */
     private final double evaporation;
+    /**
+     * Die Konstante Q bestimmt die Menge der Pheromone, die eine Ameise nach Abschluss ihrer Tour hinterlässt.
+     * Ein höherer Q-Wert bedeutet, dass erfolgreiche Touren mehr Pheromone auf ihren Kanten hinterlassen,
+     * was zukünftige Ameisen dazu anregt, diese Kanten häufiger zu benutzen.
+     */
     private final double Q;
+    /**
+     * Der Parameter antFactor bestimmt den Faktor, mit dem die Anzahl der Ameisen im Algorithmus berechnet wird.
+     * Ein höherer Wert führt zu einer größeren Anzahl von Ameisen.
+     */
     private final double antFactor;
+    /**
+     * Der Parameter randomFactor reguliert den Grad der Zufälligkeit im Ameisenalgorithmus.
+     * Ein höherer Wert erhöht die Wahrscheinlichkeit zufälliger Entscheidungen während der Suche.
+     */
     private final double randomFactor;
 
     // Anzahl der Städte und Ameisen
@@ -30,16 +60,20 @@ public class AntColonyOpt {
     // Wahrscheinlichkeiten für die Wahl der nächsten Stadt
     private final double[] probabilities;
 
-    private int currentIndex;
+    private int currentCity;
+
+    public int[] getBestTourOrder() {
+        return bestTourOrder;
+    }
 
     private int[] bestTourOrder;
     private double bestTourLength;
 
-    public double getHoleDis() {
-        return holeDis;
+    public double getWholeDis() {
+        return wholeDis;
     }
 
-    private double holeDis;
+    private double wholeDis;
 
     public AntColonyOpt(double[][] matrix, int noOfCities, double c, double alpha, double beta,
                         double evaporation, double Q, double antFactor, double randomFactor) {
@@ -59,8 +93,11 @@ public class AntColonyOpt {
         numberOfCities = graph.length;
         numberOfAnts = (int) (numberOfCities * antFactor);
 
+        // Die Pheromonspuren zwischen den Städten
         trails = new double[numberOfCities][numberOfCities];
+        // Die Wahrscheinlichkeiten für die Auswahl der nächsten Stadt durch eine Ameise
         probabilities = new double[numberOfCities];
+        // Initialisierung von Ameisen
         IntStream.range(0, numberOfAnts)
                 .forEach(i -> ants.add(new Ant(numberOfCities)));
     }
@@ -83,37 +120,42 @@ public class AntColonyOpt {
 
     public void solve() {
 
+        // Initialisierung des Pheromonmatrix mit einem Anfangswert c
         clearTrails();
         setupAnts();
         moveAnts();
+        // Pheromonspuren aktualisieren
         updateTrails();
+        // Beste Tour aktualisieren
         updateBest();
         System.out.println("Gesamte Länge: " + (bestTourLength - numberOfCities));
-        System.out.println("Beste Torreihe: " + Arrays.toString(bestTourOrder));
+        System.out.println("Beste Tourreihe: " + Arrays.toString(bestTourOrder));
         bestTourOrder.clone();
         System.out.println("=".repeat(70));
-        holeDis = bestTourLength - numberOfCities;
+        wholeDis = bestTourLength - numberOfCities;
     }
 
     public void setupAnts() {
         for (Ant ant : ants) {
+            // Alle vorherigen Tourdaten löschen
             ant.clear();
+            // Start und die nächste Stadt (random)
             ant.visitCity(-1, random.nextInt(numberOfCities));
         }
-        currentIndex = 0;
+        currentCity = 0;
     }
 
     private void moveAnts() {
-        for (int i = currentIndex; i < numberOfCities - 1; i++) {
+        for (int i = currentCity; i < numberOfCities - 1; i++) {
             for (Ant ant : ants) {
-                ant.visitCity(currentIndex, selectNextCity(ant));
+                ant.visitCity(currentCity, selectNextCity(ant));
             }
-            currentIndex++;
+            currentCity++;
         }
     }
 
     private int selectNextCity(Ant ant) {
-        int t = random.nextInt(numberOfCities - currentIndex);
+        int t = random.nextInt(numberOfCities - currentCity);
         if (random.nextDouble() < randomFactor) {
             OptionalInt cityIndex = IntStream.range(0, numberOfCities)
                     .filter(i -> i == t && !ant.visited(i))
@@ -135,14 +177,20 @@ public class AntColonyOpt {
         throw new RuntimeException("There are no other cities");
     }
 
+    /**
+     * Die Wahrscheinlichkeiten für eine bestimmte Ameise berechnen
+     */
     public void calculateProbabilities(Ant ant) {
-        int i = ant.trail[currentIndex];
+        // Die aktuelle Stadt, die die Ameise besucht, wird ermittelt
+        int i = ant.trail[currentCity];
         double pheromone = 0.0;
+        // Die Summe der Pheromonwerte für die verbleibenden unbesuchten Städte wird berechnet
         for (int l = 0; l < numberOfCities; l++) {
             if (!ant.visited(l)) {
                 pheromone += Math.pow(trails[i][l], alpha) * Math.pow(1.0 / graph[i][l], beta);
             }
         }
+        // Die Wahrscheinlichkeiten für jede verbleibende unbesuchte Stadt werden berechnet
         for (int j = 0; j < numberOfCities; j++) {
             if (ant.visited(j)) {
                 probabilities[j] = 0.0;
@@ -170,6 +218,7 @@ public class AntColonyOpt {
 
     private void updateBest() {
         if (bestTourOrder == null) {
+            // Die Tour der ersten Ameise in der Liste ants als beste Tour festgelegt
             bestTourOrder = ants.get(0).trail;
             bestTourLength = ants.get(0).trailLength(graph);
         }
